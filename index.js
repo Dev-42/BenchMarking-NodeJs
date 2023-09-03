@@ -16,10 +16,26 @@ let server = https.createServer((req,res) => {
     
         readFileSync('./db.json')
     }
-
-
-    
-
+    else if(req.method === "GET" && req.url === '/textasync'){
+        function readFileAsync(filepath){
+            return new Promise((resolve,reject) => {
+                fs.readFile(filepath, 'utf-8')
+                    .then(data => {
+                        resolve(data)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
+        }
+        readFileAsync('./db.json')
+            .then(data => {
+                console.log("File content",data)
+            })
+            .catch(error => {
+                console.error("Error reading file",error)
+            })
+    }
 })
 
 server.listen(port, () => {
